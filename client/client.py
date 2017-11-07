@@ -1,4 +1,3 @@
-import getpass
 import telnetlib
 import json
 
