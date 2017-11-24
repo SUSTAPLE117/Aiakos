@@ -13,14 +13,16 @@ class Aiakos(object):
         with open(filename, "r") as devices_list:
             self.devices = json.loads(devices_list.read())
 
-    def connect_telnet(self, username):
-        password = self.users[username]
-        self.tn = telnetlib.Telnet(ip)
-
-        self.tn.read_until(b"Login: ")
-        self.tn.write(username.encode('ascii') + b"\n")
-        self.tn.read_until(b"Password: ")
-        self.tn.write(password.encode('ascii') + b"\n")
+    def connect_telnet(self, device):
+        for ip in device.keys():
+            users = device[ip]
+            for username in users.keys():
+                self.tn = telnetlib.Telnet(ip)
+                self.tn.read_until(b"Login: ")
+                self.tn.write(username.encode('ascii') + b"\n")
+                self.tn.read_until(b"Password: ")
+                password = users[username]
+                self.tn.write(password.encode('ascii') + b"\n")
 
     def change_password(self, new_password):
 
@@ -34,23 +36,19 @@ class Aiakos(object):
         # FIXME: request password to server.
         return "password"
 
-    def flash_device(self, ip):
+    def flash_device(self, device):
 
-        print("Flashing: {} ".format(ip))
-
-        self.users = self.devices[ip]
-        for username in self.users.keys():
-            self.connect_telnet(username)
-            new_password = self.request_new_password()
-            self.change_password(new_password)
-            print(self.tn.read_all().decode('ascii'))
+        self.connect_telnet(device)
+        new_password = self.request_new_password()
+        self.change_password(new_password)
+        print(self.tn.read_all().decode('ascii'))
 
     def run(self):
 
         self.get_devices("devices.json")
 
-        for ip in self.devices.keys():
-            self.flash_device(ip)
+        for device in self.devices:
+            self.flash_device(device)
 
 
 if __name__ == "__main__":
