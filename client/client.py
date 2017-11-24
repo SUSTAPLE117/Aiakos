@@ -7,6 +7,11 @@ class Aiakos(object):
         self.devices = None
         self.users = None
         self.tn = None
+        self.config = None
+
+    def load_config(self):
+        with open("config.json", "r") as config_file:
+            self.config = json.loads(config_file.read())
 
     def get_devices(self, filename):
 
@@ -44,7 +49,7 @@ class Aiakos(object):
         print(self.tn.read_all().decode('ascii'))
 
     def run(self):
-
+        self.load_config()
         self.get_devices("devices.json")
 
         for device in self.devices:
