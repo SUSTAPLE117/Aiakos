@@ -8,7 +8,6 @@ from urllib.parse import parse_qs, urlparse
 
 
 class AiakosServer(http.server.SimpleHTTPRequestHandler):
-
     def _set_response(self):
 
         self.send_response(200)
@@ -22,9 +21,9 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
         while True:
             password = ''.join(choice(alphabet) for i in range(password_length))
             if (any(c.islower() for c in password)
-                    and any(c.isupper() for c in password)
-                    and any(c.lower() for c in password)
-                    and sum(c.isdigit() for c in password) >= 3):
+                and any(c.isupper() for c in password)
+                and any(c.lower() for c in password)
+                and sum(c.isdigit() for c in password) >= 3):
                 break
         return password
 
@@ -40,7 +39,7 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
 def run(handler_class=AiakosServer, certificate_file=None):
     logging.basicConfig(level=logging.INFO)
 
-    httpd = http.server.HTTPServer(('localhost', 443), handler_class)
+    httpd = http.server.HTTPServer(('localhost', 8080), handler_class)
     httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certificate_file, server_side=True)
 
     logging.info('Starting httpd...\n')
@@ -50,3 +49,7 @@ def run(handler_class=AiakosServer, certificate_file=None):
         pass
     httpd.server_close()
     logging.info('Stopping httpd...\n')
+
+
+if __name__ == "__main__":
+    run()
