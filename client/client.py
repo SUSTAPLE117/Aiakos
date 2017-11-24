@@ -24,17 +24,6 @@ class Aiakos(object):
         self.tn.read_until(b"Password: ")
         self.tn.write(password.encode('ascii') + b"\n")
 
-    def generate_password(self):
-        
-        alphabet = string.ascii_letters + string.digits
-        while True:
-            password = ''.join(choice(alphabet) for i in range(10)) # TODO: custom length
-            if (any(c.islower() for c in password)
-                and any(c.isupper() for c in password)
-                and sum(c.isdigit() for c in password) >= 3): # TODO: custom number length
-        break
-        return password
-
     def change_password(self, new_password):
 
         self.tn.write(b"passwd\n")
