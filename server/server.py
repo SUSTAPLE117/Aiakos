@@ -1,19 +1,19 @@
 import http.server
+import json
+import logging
 import ssl
 import string
 from secrets import choice
+from urllib.parse import parse_qs, urlparse
 
 
-class AiakosServer(object):
-    certificate_file = None
+class AiakosServer(http.server.SimpleHTTPRequestHandler):
 
-    def __init__(self, certificate_file):
-        self.certificate_file = certificate_file
+    def _set_response(self):
 
-    def run(self):
-        httpd = http.server.HTTPServer(('localhost', 443), http.server.SimpleHTTPRequestHandler)
-        httpd.socket = ssl.wrap_socket(httpd.socket, certfile=self.certificate_file, server_side=True)
-        httpd.serve_forever()
+        self.send_response(200)
+        self.send_header('Content-type', 'text/json')
+        self.end_headers()
 
     @staticmethod
     def generate_password(password_length):
@@ -27,3 +27,26 @@ class AiakosServer(object):
                     and sum(c.isdigit() for c in password) >= 3):
                 break
         return password
+
+    def do_GET(self):
+        logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+        query_components = parse_qs(urlparse(self.path).query)
+        password_length = query_components["password_length"]
+        self._set_response()
+        response_data = json.dumps(self.generate_password(password_length))
+        self.wfile.write(response_data)
+
+
+def run(handler_class=AiakosServer, certificate_file=None):
+    logging.basicConfig(level=logging.INFO)
+
+    httpd = http.server.HTTPServer(('localhost', 443), handler_class)
+    httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certificate_file, server_side=True)
+
+    logging.info('Starting httpd...\n')
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    httpd.server_close()
+    logging.info('Stopping httpd...\n')
