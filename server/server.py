@@ -36,11 +36,11 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(response_data)
 
 
-def run(handler_class=AiakosServer, certificate_file=None):
+def run(handler_class=AiakosServer, certificate_file=None, key_file=None):
     logging.basicConfig(level=logging.INFO)
 
     httpd = http.server.HTTPServer(('localhost', 8080), handler_class)
-    httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certificate_file, server_side=True)
+    httpd.socket = ssl.wrap_socket(httpd.socket, keyfile=key_file, certfile=certificate_file, server_side=True)
 
     logging.info('Starting httpd...\n')
     try:
@@ -52,4 +52,4 @@ def run(handler_class=AiakosServer, certificate_file=None):
 
 
 if __name__ == "__main__":
-    run()
+    run(certificate_file="certificate.pem",key_file="key.pem")
