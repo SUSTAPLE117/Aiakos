@@ -21,9 +21,9 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
         while True:
             password = ''.join(choice(alphabet) for i in range(password_length))
             if (any(c.islower() for c in password)
-                and any(c.isupper() for c in password)
-                and any(c.lower() for c in password)
-                and sum(c.isdigit() for c in password) >= 3):
+                    and any(c.isupper() for c in password)
+                    and any(c.lower() for c in password)
+                    and sum(c.isdigit() for c in password) >= 3):
                 break
         return password
 
@@ -52,4 +52,4 @@ def run(handler_class=AiakosServer, certificate_file=None, key_file=None):
 
 
 if __name__ == "__main__":
-    run(certificate_file="certificate.pem",key_file="key.pem")
+    run(certificate_file="certificate.pem", key_file="key.pem")
