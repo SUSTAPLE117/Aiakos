@@ -23,7 +23,7 @@ class Aiakos(object):
             users = device[ip]
             for username in users.keys():
                 self.tn = telnetlib.Telnet(ip)
-                self.tn.read_until(b"Login: ")
+                self.tn.read_until(b"login: ")
                 self.tn.write(username.encode('ascii') + b"\n")
                 self.tn.read_until(b"Password: ")
                 password = users[username]
@@ -33,6 +33,8 @@ class Aiakos(object):
 
         self.tn.write(b"passwd\n")
         self.tn.read_until(b"New password:")
+        self.tn.write(new_password.encode("ascii") + b"\n")
+        self.tn.read_until(b"Retype password:")
         self.tn.write(new_password.encode("ascii") + b"\n")
         self.tn.write(b"exit\n")
 

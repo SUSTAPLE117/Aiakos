@@ -52,4 +52,4 @@ def run(handler_class=AiakosServer, certificate_file=None, key_file=None):
 
 
 if __name__ == "__main__":
-    run(certificate_file="certificate.pem",key_file="key.pem")
+    run(certificate_file="certificate.pem", key_file="key.pem")
