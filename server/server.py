@@ -30,10 +30,10 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         query_components = parse_qs(urlparse(self.path).query)
-        password_length = query_components["password_length"]
+        password_length = int(query_components["password_length"][0])
         self._set_response()
         response_data = json.dumps(self.generate_password(password_length))
-        self.wfile.write(response_data)
+        self.wfile.write(response_data.encode('utf-8'))
 
 
 def run(handler_class=AiakosServer, certificate_file=None, key_file=None):
