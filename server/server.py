@@ -21,19 +21,19 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
         while True:
             password = ''.join(choice(alphabet) for i in range(password_length))
             if (any(c.islower() for c in password)
-                and any(c.isupper() for c in password)
-                and any(c.lower() for c in password)
-                and sum(c.isdigit() for c in password) >= 3):
+                    and any(c.isupper() for c in password)
+                    and any(c.lower() for c in password)
+                    and sum(c.isdigit() for c in password) >= 3):
                 break
         return password
 
     def do_GET(self):
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         query_components = parse_qs(urlparse(self.path).query)
-        password_length = query_components["password_length"]
+        password_length = int(query_components["password_length"][0])
         self._set_response()
         response_data = json.dumps(self.generate_password(password_length))
-        self.wfile.write(response_data)
+        self.wfile.write(response_data.encode('utf-8'))
 
 
 def run(handler_class=AiakosServer, certificate_file=None, key_file=None):
