@@ -8,10 +8,11 @@ from urllib.parse import parse_qs, urlparse
 
 
 class AiakosServer(http.server.SimpleHTTPRequestHandler):
-    def _set_response(self):
+    def _set_response(self, password_length):
 
         self.send_response(200)
-        self.send_header('Content-type', 'text/json')
+        self.send_header('Content-Type', 'text/json')
+        self.send_header('Content-Length', password_length+2)
         self.end_headers()
 
     @staticmethod
@@ -31,7 +32,7 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         query_components = parse_qs(urlparse(self.path).query)
         password_length = int(query_components["password_length"][0])
-        self._set_response()
+        self._set_response(password_length)
         response_data = json.dumps(self.generate_password(password_length))
         self.wfile.write(response_data.encode('utf-8'))
 
