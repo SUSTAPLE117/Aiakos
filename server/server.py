@@ -1,3 +1,4 @@
+import csv
 import http.server
 import json
 import logging
@@ -12,7 +13,7 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
 
         self.send_response(200)
         self.send_header('Content-Type', 'text/json')
-        self.send_header('Content-Length', password_length+2)
+        self.send_header('Content-Length', password_length + 2)
         self.end_headers()
 
     @staticmethod
@@ -28,12 +29,20 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
                 break
         return password
 
+    @staticmethod
+    def write_password_to_file(password, client_ip):
+        with open('passwords.csv', 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow([client_ip, password])
+
     def do_GET(self):
-        logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         query_components = parse_qs(urlparse(self.path).query)
         password_length = int(query_components["password_length"][0])
         self._set_response(password_length)
-        response_data = json.dumps(self.generate_password(password_length))
+        new_password = self.generate_password(password_length)
+        self.write_password_to_file(new_password, self.client_address[0])
+        response_data = json.dumps(new_password)
         self.wfile.write(response_data.encode('utf-8'))
 
 
