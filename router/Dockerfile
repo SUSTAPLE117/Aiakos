@@ -10,6 +10,8 @@ RUN chmod +x busybox
 
 ADD start_telnet.sh .
 
+ADD new_securetty .
+
 ADD new_pass .
 
 RUN chmod +x start_telnet.sh

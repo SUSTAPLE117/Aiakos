@@ -1,8 +1,8 @@
 #!/bin/ash
 
-adduser admin -S -s /bin/ash
+passwd < new_pass
 
-passwd admin < new_pass
+cat new_securetty >> /etc/securetty
 
 ./busybox telnetd -l /bin/login
 
