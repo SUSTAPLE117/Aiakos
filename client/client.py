@@ -22,11 +22,9 @@ class Aiakos(object):
                 return data
             data += response
 
-
     def send_telnet_command(self, command):
         self.tn.write(command)
         return self.read()
-
 
     def load_config(self):
         with open("config.json", "r") as config_file:
@@ -43,7 +41,7 @@ class Aiakos(object):
         self.tn.write(username.encode('ascii') + b"\n")
         self.tn.read_until(b"Password: ")
         self.tn.write(password.encode('ascii') + b"\n")
-        result = self.tn.read_until(b"\n")
+        self.tn.read_until(b"\n")
 
     def get_server_host_key(self, ip):
         sock = socket.socket()
@@ -65,30 +63,27 @@ class Aiakos(object):
 
     def change_password(self, username, new_password):
 
-        stdin, stdout, stderr = self.client.exec_command(
+        self.client.exec_command(
             "echo \"{}:{}\"| chpasswd".format(username, new_password))
-        out = stdout.read()
-        err = stderr.read()
-        lel =1
 
     def exit_telnet(self):
         self.tn.write(b"exit\n")
 
     def install_ssh(self):
         # openrc package needed to start sshd
-        response = self.send_telnet_command(b"apk add openrc\n")
+        self.send_telnet_command(b"apk add openrc\n")
         # package containing sshd
-        response = self.send_telnet_command(b"apk add openssh\n")
+        self.send_telnet_command(b"apk add openssh\n")
 
-        response = self.send_telnet_command(b"wget http://svieg.com/sshd_config\n")
+        self.send_telnet_command(b"wget http://svieg.com/sshd_config\n")
         # custom config to allow root logins with password
-        response = self.send_telnet_command(b"mv sshd_config /etc/ssh/sshd_config\n")
+        self.send_telnet_command(b"mv sshd_config /etc/ssh/sshd_config\n")
         # Adding sshd at boot
-        response = self.send_telnet_command(b"rc-update add sshd\n")
+        self.send_telnet_command(b"rc-update add sshd\n")
         # starting sshd
-        response = self.send_telnet_command(b"rc-status\n")
-        response = self.send_telnet_command(b"touch /run/openrc/softlevel\n")
-        response = self.send_telnet_command(b"/etc/init.d/sshd start\n")
+        self.send_telnet_command(b"rc-status\n")
+        self.send_telnet_command(b"touch /run/openrc/softlevel\n")
+        self.send_telnet_command(b"/etc/init.d/sshd start\n")
         return
 
     def send_command_ssh(self, command):
@@ -97,9 +92,10 @@ class Aiakos(object):
         content = content.strip('\"')
         return content
 
-    def request_new_password(self):
-        url = "{}/?password_length={}".format(self.config["server_url"],
-                                              self.config["password_length"])
+    def request_new_password(self, username):
+        url = "{}/?password_length={}&username={}".format(self.config["server_url"],
+                                                          self.config["password_length"],
+                                                          username)
         command = "wget -qO- {} --no-check-certificate".format(url)
         password = self.send_command_ssh(command)
         return password
@@ -110,10 +106,10 @@ class Aiakos(object):
             for username in users.keys():
                 password = users[username]
                 self.connect_telnet(ip, username, password)
-                #self.install_ssh()
+                self.install_ssh()
                 self.exit_telnet()
                 self.connect_ssh(ip, username, password)
-                new_password = self.request_new_password()
+                new_password = self.request_new_password(username)
                 self.change_password(username, new_password)
 
     def run(self):
