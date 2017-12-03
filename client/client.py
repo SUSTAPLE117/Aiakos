@@ -41,7 +41,7 @@ class Aiakos(object):
 
     def request_new_password(self):
         payload = {"password_length" : self.config["password_length"]}
-        response = requests.get(self.config["server_url"], params=payload)
+        response = requests.get(self.config["server_url"], params=payload,verify=False)
         return "password"
 
     def flash_device(self, device):
