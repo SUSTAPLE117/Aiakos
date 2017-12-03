@@ -1,0 +1,20 @@
+routera:
+    build: .
+    net: host
+    command: tail -f /dev/null
+routerb:
+    build: .
+    net: host
+    command: tail -f /dev/null
+routerc:
+    build: .
+    net: host
+    command: tail -f /dev/null
+routerd:
+    build: .
+    net: host
+    command: tail -f /dev/null
+routere:
+    build: .
+    net: host
+    command: tail -f /dev/null
