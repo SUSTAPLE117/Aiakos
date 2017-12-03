@@ -7,35 +7,35 @@ services:
         networks:
             testing_net:
                 ipv4_address: 172.28.1.1
-        command: tail -f /dev/null
+        stdin_open: true
     routerb:
         container_name: router_b
         build: .
         networks:
             testing_net:
                 ipv4_address: 172.28.1.2
-        command: tail -f /dev/null
+        stdin_open: true
     routerc:
         container_name: router_c
         build: .
         networks:
             testing_net:
                 ipv4_address: 172.28.1.3
-        command: tail -f /dev/null
+        stdin_open: true
     routerd:
         container_name: router_d
         build: .
         networks:
             testing_net:
                 ipv4_address: 172.28.1.4
-        command: tail -f /dev/null
+        stdin_open: true
     routere:
         container_name: router_e
         build: .
         networks:
             testing_net:
                 ipv4_address: 172.28.1.5
-        command: tail -f /dev/null
+        stdin_open: true
 
 networks:
     testing_net:
