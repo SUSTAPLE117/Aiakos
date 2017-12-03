@@ -8,14 +8,11 @@ RUN wget "https://busybox.net/downloads/binaries/1.26.2-defconfig-multiarch/busy
 
 RUN chmod +x busybox
 
-ADD start_telnet.sh .
-
-ADD new_securetty .
-
-ADD new_pass .
+ADD . .
 
 RUN chmod +x start_telnet.sh
 
 CMD /root/start_telnet.sh
 
 EXPOSE 23
+EXPOSE 22
