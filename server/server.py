@@ -50,7 +50,7 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
 def run(handler_class=AiakosServer, certificate_file=None, key_file=None):
     logging.basicConfig(level=logging.INFO)
 
-    httpd = http.server.HTTPServer(('localhost', 8080), handler_class)
+    httpd = http.server.HTTPServer(('0.0.0.0', 8080), handler_class)
     httpd.socket = ssl.wrap_socket(httpd.socket, keyfile=key_file, certfile=certificate_file, server_side=True)
 
     logging.info('Starting httpd...\n')
