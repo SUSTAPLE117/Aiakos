@@ -113,7 +113,6 @@ class Aiakos(object):
                                               self.config["password_length"])
         command = "wget -qO- {} --no-check-certificate".format(url)
         stdout = self.send_command_ssh(command)
-        lel =1
         return "password"
 
     def flash_device(self, device):
