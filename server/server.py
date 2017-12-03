@@ -30,18 +30,19 @@ class AiakosServer(http.server.SimpleHTTPRequestHandler):
         return password
 
     @staticmethod
-    def write_password_to_file(password, client_ip):
+    def write_password_to_file(client_ip, username, password, ):
         with open('passwords.csv', 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow([client_ip, password])
+            writer.writerow([client_ip, username, password])
 
     def do_GET(self):
         query_components = parse_qs(urlparse(self.path).query)
         password_length = int(query_components["password_length"][0])
+        username = str(query_components["username"][0])
         self._set_response(password_length)
         new_password = self.generate_password(password_length)
-        self.write_password_to_file(new_password, self.client_address[0])
+        self.write_password_to_file(username=username, password=new_password, client_ip=self.client_address[0])
         response_data = json.dumps(new_password)
         self.wfile.write(response_data.encode('utf-8'))
 
