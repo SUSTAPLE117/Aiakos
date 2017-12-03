@@ -2,23 +2,44 @@ version: "3"
 
 services:
     routera:
+        container_name: router_a
         build: .
-        network_mode: "host"
+        networks:
+            testing_net:
+                ipv4_address: 172.28.1.1
         command: tail -f /dev/null
     routerb:
+        container_name: router_b
         build: .
-        network_mode: "host"
+        networks:
+            testing_net:
+                ipv4_address: 172.28.1.2
         command: tail -f /dev/null
     routerc:
+        container_name: router_c
         build: .
-        network_mode: "host"
+        networks:
+            testing_net:
+                ipv4_address: 172.28.1.3
         command: tail -f /dev/null
     routerd:
+        container_name: router_d
         build: .
-        network_mode: "host"
+        networks:
+            testing_net:
+                ipv4_address: 172.28.1.4
         command: tail -f /dev/null
     routere:
+        container_name: router_e
         build: .
-        network_mode: "host"
+        networks:
+            testing_net:
+                ipv4_address: 172.28.1.5
         command: tail -f /dev/null
-        
+
+networks:
+    testing_net:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.28.0.0/16
