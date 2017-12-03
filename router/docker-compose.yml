@@ -1,20 +1,24 @@
-routera:
-    build: .
-    net: host
-    command: tail -f /dev/null
-routerb:
-    build: .
-    net: host
-    command: tail -f /dev/null
-routerc:
-    build: .
-    net: host
-    command: tail -f /dev/null
-routerd:
-    build: .
-    net: host
-    command: tail -f /dev/null
-routere:
-    build: .
-    net: host
-    command: tail -f /dev/null
+version: "3"
+
+services:
+    routera:
+        build: .
+        network_mode: "host"
+        command: tail -f /dev/null
+    routerb:
+        build: .
+        network_mode: "host"
+        command: tail -f /dev/null
+    routerc:
+        build: .
+        network_mode: "host"
+        command: tail -f /dev/null
+    routerd:
+        build: .
+        network_mode: "host"
+        command: tail -f /dev/null
+    routere:
+        build: .
+        network_mode: "host"
+        command: tail -f /dev/null
+        
