@@ -1,7 +1,8 @@
 import base64
+import json
 import socket
 import telnetlib
-import json
+
 import paramiko
 
 
@@ -96,7 +97,7 @@ class Aiakos(object):
         url = "{}/?password_length={}&username={}".format(self.config["server_url"],
                                                           self.config["password_length"],
                                                           username)
-        command = "wget -qO- {} --no-check-certificate".format(url)
+        command = "wget -qO- --no-check-certificate '{}' ".format(url)
         password = self.send_command_ssh(command)
         return password
 
